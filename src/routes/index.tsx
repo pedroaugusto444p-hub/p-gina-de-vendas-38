@@ -1,23 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
+import vslHtml from "../vsl.html?raw";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+// The sales page is a prebuilt static site; serve its HTML as-is at "/".
 export const Route = createFileRoute("/")({
-  component: Index,
+  server: {
+    handlers: {
+      GET: () =>
+        new Response(vslHtml, { headers: { "content-type": "text/html; charset=utf-8" } }),
+    },
+  },
+  head: () => ({
+    meta: [
+      { title: "+200 Atividades Criativas para Fazer em Casa" },
+      { name: "description", content: "Mais de 200 atividades criativas em PDF para crianças de 3 a 8 anos." },
+      { property: "og:title", content: "+200 Atividades Criativas para Fazer em Casa" },
+      { property: "og:description", content: "Menos Telas, Mais Diversão! Kits Básico e Completo com bônus." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
